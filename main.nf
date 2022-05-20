@@ -20,7 +20,7 @@ params.CONFIG_YAML = "gs://sands-nf-tower/config.yaml"
 
 params.STUDY = 'PRJEB45555'
 params.TEST_SUBMISSION = 'true'
-params.ASYNC_FLAG = 'true'
+params.ASYNC_FLAG = 'false'
 
 //import nextflow.splitter.CsvSplitter
 nextflow.enable.dsl = 2
