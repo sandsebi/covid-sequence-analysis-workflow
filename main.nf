@@ -13,7 +13,7 @@ params.SECRETS = "/hps/nobackup/cochrane/ena/users/sands/100/1k/ENA_SARS_Cov2_na
 //params.OUTDIR = "/hps/nobackup/cochrane/ena/users/sands/100/1k/results"
 //params.NXF_HOME = "/hps/nobackup/cochrane/ena/users/sands/1k"
 
-params.INDEX = "gs://sands-nf-tower/nanopore10.tsv"
+params.INDEX = "gs://sands-nf-tower/nanopore5.tsv"
 params.STOREDIR = "gs://sands-nf-tower/storeDir"
 params.OUTDIR = "gs://sands-nf-tower/results"
 params.CONFIG_YAML = "gs://sands-nf-tower/config.yaml"
@@ -43,7 +43,7 @@ process map_to_reference {
 
     cpus 4 /* more is better, parallelizes very well*/
     memory '8 GB'
-    container 'sands0/ena-analysis-submitter:1.7'
+    container 'sands0/ena-analysis-submitter:1.8'
 
     input:
     tuple val(run_accession), val(sample_accession), file(input_file)
