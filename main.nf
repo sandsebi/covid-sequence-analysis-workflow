@@ -1,8 +1,8 @@
 #!/usr/bin/env nextflow
 
-params.SARS2_FA = "/hps/nobackup/cochrane/ena/users/sands/100/1k/ENA_SARS_Cov2_nanopore/NC_045512.2.fa"
-params.SARS2_FA_FAI = "/hps/nobackup/cochrane/ena/users/sands/100/1k/ENA_SARS_Cov2_nanopore/NC_045512.2.fa.fai"
-params.SECRETS = "/hps/nobackup/cochrane/ena/users/sands/100/1k/ENA_SARS_Cov2_nanopore/prepro_projects_accounts.csv"
+//params.SARS2_FA = "/hps/nobackup/cochrane/ena/users/sands/100/1k/ENA_SARS_Cov2_nanopore/NC_045512.2.fa"
+//params.SARS2_FA_FAI = "/hps/nobackup/cochrane/ena/users/sands/100/1k/ENA_SARS_Cov2_nanopore/NC_045512.2.fa.fai"
+//params.SECRETS = "/hps/nobackup/cochrane/ena/users/sands/100/1k/ENA_SARS_Cov2_nanopore/prepro_projects_accounts.csv"
 
 //params.INDEX = "gs://prj-int-dev-covid19-nf-gls/prepro/nanopore.index.tsv"
 //params.STOREDIR = "gs://prj-int-dev-covid19-nf-gls/prepro/storeDir"
@@ -17,6 +17,10 @@ params.INDEX = "gs://sands-nf-tower/nanopore5.tsv"
 params.STOREDIR = "gs://sands-nf-tower/storeDir"
 params.OUTDIR = "gs://sands-nf-tower/results"
 params.CONFIG_YAML = "gs://sands-nf-tower/config.yaml"
+
+params.SARS2_FA = "gs://sands-nf-tower/data/NC_045512.2.fa"
+params.SARS2_FA = "gs://sands-nf-tower/data/NC_045512.2.fa.fai"
+params.SECRETS = "gs://sands-nf-tower/data/projects_accounts.csv"
 
 params.STUDY = 'PRJEB45555'
 params.TEST_SUBMISSION = 'true'
