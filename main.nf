@@ -24,7 +24,7 @@ params.SECRETS = "gs://sands-nf-tower/data/projects_accounts.csv"
 
 params.STUDY = 'PRJEB45555'
 params.TEST_SUBMISSION = 'true'
-params.ASYNC_FLAG = 'false'
+params.ASYNC_FLAG = 'true'
 
 //import nextflow.splitter.CsvSplitter
 nextflow.enable.dsl = 2
@@ -47,7 +47,7 @@ process map_to_reference {
 
     cpus 4 /* more is better, parallelizes very well*/
     memory '8 GB'
-    container 'sands0/ena-analysis-submitter:1.8'
+    container 'sands0/ena-analysis-submitter:1.9'
 
     input:
     tuple val(run_accession), val(sample_accession), file(input_file)
