@@ -19,7 +19,7 @@ params.OUTDIR = "gs://sands-nf-tower/results"
 params.CONFIG_YAML = "gs://sands-nf-tower/config.yaml"
 
 params.SARS2_FA = "gs://sands-nf-tower/data/NC_045512.2.fa"
-params.SARS2_FA = "gs://sands-nf-tower/data/NC_045512.2.fa.fai"
+params.SARS2_FA_FAI = "gs://sands-nf-tower/data/NC_045512.2.fa.fai"
 params.SECRETS = "gs://sands-nf-tower/data/projects_accounts.csv"
 
 params.STUDY = 'PRJEB45555'
