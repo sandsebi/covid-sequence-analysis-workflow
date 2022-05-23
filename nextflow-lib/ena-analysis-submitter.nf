@@ -28,6 +28,7 @@ process ena_analysis_submit {
     line="\$(grep ${study_accession} ${projects_accounts_csv})"
     webin_id="\$(echo \${line} | cut -d ',' -f 4)"
     webin_password="\$(echo \${line} | cut -d ',' -f 5)"
+    async_flag=${async_flag}
     
     mkdir -p ${run_accession}_output/${study_accession}
     cp ${config_yaml} ${run_accession}_output/${study_accession}
