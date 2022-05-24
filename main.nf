@@ -13,7 +13,7 @@
 //params.OUTDIR = "/hps/nobackup/cochrane/ena/users/sands/100/1k/results"
 //params.NXF_HOME = "/hps/nobackup/cochrane/ena/users/sands/1k"
 
-params.INDEX = "gs://sands-nf-tower/nanopore5.tsv"
+params.INDEX = "gs://sands-nf-tower/test_sync_5.tsv"
 params.STOREDIR = "gs://sands-nf-tower/storeDir"
 params.OUTDIR = "gs://sands-nf-tower/results"
 params.CONFIG_YAML = "gs://sands-nf-tower/config.yaml"
@@ -24,7 +24,7 @@ params.SECRETS = "gs://prj-int-dev-covid19-nf-gls/data/projects_accounts.csv"
 
 params.STUDY = 'PRJEB45555'
 params.TEST_SUBMISSION = 'true'
-params.ASYNC_FLAG = 'true'
+params.ASYNC_FLAG = 'false'
 
 //import nextflow.splitter.CsvSplitter
 nextflow.enable.dsl = 2
