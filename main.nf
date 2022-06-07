@@ -18,8 +18,8 @@ params.STOREDIR = "gs://sands-nf-tower/storeDir"
 params.OUTDIR = "gs://sands-nf-tower/results"
 params.CONFIG_YAML = "gs://sands-nf-tower/config.yaml"
 
-params.SARS2_FA = "gs://prj-int-dev-covid19-nf-gls/data/MN648051.1.fasta"
-params.SARS2_FA_FAI = "gs://prj-int-dev-covid19-nf-gls/data/MN648051.1.fasta.fai"
+params.SARS2_FA = "gs://prj-int-dev-covid19-nf-gls/data/MN648051.1.fa"
+params.SARS2_FA_FAI = "gs://prj-int-dev-covid19-nf-gls/data/MN648051.1.fa.fai"
 params.SECRETS = "gs://prj-int-dev-covid19-nf-gls/data/projects_accounts.csv"
 
 params.STUDY = 'PRJEB45555'
