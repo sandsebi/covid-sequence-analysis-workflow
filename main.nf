@@ -18,7 +18,7 @@ params.STOREDIR = "gs://sands-nf-tower/storeDir"
 params.OUTDIR = "gs://sands-nf-tower/results"
 params.CONFIG_YAML = "gs://sands-nf-tower/config.yaml"
 
-params.SARS2_FA = "gs://sands-nf-tower/data/MN648051.1.fa"
+params.SARS2_FA = "gs://sands-nf-tower/data/MT903344.1.fasta"
 params.SARS2_FA_FAI = "gs://sands-nf-tower/data/MN648051.1.fa.fai"
 params.SECRETS = "gs://prj-int-dev-covid19-nf-gls/data/projects_accounts.csv"
 
@@ -88,7 +88,7 @@ process map_to_reference {
     fix_consensus_header.py headless_consensus.fasta > ${run_accession}_consensus.fasta
     bgzip ${run_accession}.coverage
     bgzip ${run_accession}_consensus.fasta
-    java -Xmx4g -jar /opt/conda/share/snpeff-5.0-1/snpEff.jar -q -no-downstream -no-upstream -noStats NC_045512.2 ${run_accession}.vcf > ${run_accession}.annot.vcf
+    java -Xmx4g -jar /opt/conda/share/snpeff-5.0-1/snpEff.jar -q -no-downstream -no-upstream -noStats MT903344.1 ${run_accession}.vcf > ${run_accession}.annot.vcf
     bgzip ${run_accession}.vcf
     bgzip ${run_accession}.annot.vcf
     mkdir -p ${run_accession}_output
