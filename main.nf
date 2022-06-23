@@ -13,7 +13,7 @@
 //params.OUTDIR = "/hps/nobackup/cochrane/ena/users/sands/100/1k/results"
 //params.NXF_HOME = "/hps/nobackup/cochrane/ena/users/sands/1k"
 
-params.INDEX = "gs://sands-nf-tower/samples10.tsv"
+params.INDEX = "gs://sands-nf-tower/samples.tsv"
 params.STOREDIR = "gs://sands-nf-tower/storeDir"
 params.OUTDIR = "gs://sands-nf-tower/results"
 params.CONFIG_YAML = "gs://sands-nf-tower/config.yaml"
@@ -109,5 +109,5 @@ workflow {
             .map { row -> tuple(row.run_accession, row.sample_accession, 'ftp://' + row.fastq_ftp) }
 
     map_to_reference(data, params.SARS2_FA, params.SARS2_FA_FAI, params.SECRETS, params.STUDY)
-    ena_analysis_submit(map_to_reference.out, params.SECRETS, params.STUDY, params.TEST_SUBMISSION, params.CONFIG_YAML, params.ASYNC_FLAG)
+    //ena_analysis_submit(map_to_reference.out, params.SECRETS, params.STUDY, params.TEST_SUBMISSION, params.CONFIG_YAML, params.ASYNC_FLAG)
 }
