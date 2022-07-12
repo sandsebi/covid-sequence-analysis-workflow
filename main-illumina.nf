@@ -45,12 +45,12 @@ nextflow.enable.dsl = 2
 process map_to_reference {
     storeDir params.STOREDIR
 
-    cpus 4 /* more is better, parallelizes very well*/
+    cpus 8
     memory '8 GB'
-    container 'sands0/ena-sars-cov2-nanopore:1.0'
+    container 'davidyuyuan/ena-sars-cov2-illumina:2.0'
 
     input:
-    tuple val(run_accession), val(sample_accession), file(input_file), file(input_file_2)
+    tuple val(run_accession), val(sample_accession), file(input_file_1), file(input_file_2)
     path(sars2_fasta)
     path(sars2_fasta_fai)
     path(projects_accounts_csv)
@@ -96,7 +96,7 @@ process map_to_reference {
     bgzip ${run_accession}_filtered.vcf
     tabix ${run_accession}.vcf.gz
     bcftools stats ${run_accession}.vcf.gz > ${run_accession}.stat
-    snpEff -q -no-downstream -no-upstream -noStats NC_045512.2 ${run_accession}.vcf > ${run_accession}.annot.vcf
+    # snpEff -q -no-downstream -no-upstream -noStats NC_045512.2 ${run_accession}.vcf > ${run_accession}.annot.vcf
     # vcf_to_consensus.py -dp 10 -af 0.25 -v ${run_accession}.vcf.gz -d ${run_accession}.coverage -o ${run_accession}_consensus.fasta -n ${run_accession} -r ${sars2_fasta}
     vcf_to_consensus.py -dp 10 -af 0.25 -v ${run_accession}.vcf.gz -d ${run_accession}.coverage -o headless_consensus.fasta -n ${run_accession} -r ${sars2_fasta}
     
@@ -107,7 +107,7 @@ process map_to_reference {
     bgzip ${run_accession}.vcf
     #bgzip ${run_accession}.annot.vcf
     mkdir -p ${run_accession}_output
-    mv ${run_accession}_trim_summary ${run_accession}.annot.vcf ${run_accession}.bam ${run_accession}.coverage ${run_accession}.stat ${run_accession}.vcf.gz ${run_accession}_output
+    mv ${run_accession}_trim_summary ${run_accession}.bam ${run_accession}.coverage ${run_accession}.stat ${run_accession}.vcf.gz ${run_accession}_output
     #mv ${run_accession}.bam ${run_accession}.coverage.gz ${run_accession}.annot.vcf.gz ${run_accession}_output
     tar -zcvf ${run_accession}_output.tar.gz ${run_accession}_output
     """
