@@ -91,7 +91,9 @@ process map_to_reference {
     lofreq indelqual --dindel ${run_accession}.bam -f ${sars2_fasta} -o ${run_accession}_fixed.bam
     samtools index ${run_accession}_fixed.bam
     lofreq call-parallel --no-default-filter --call-indels --pp-threads ${task.cpus} -f ${sars2_fasta} -o ${run_accession}.vcf ${run_accession}_fixed.bam
+    sleep 10
     lofreq filter --af-min 0.25 -i ${run_accession}.vcf -o ${run_accession}_filtered.vcf
+    sleep 10
     bgzip ${run_accession}.vcf
     bgzip ${run_accession}_filtered.vcf
     tabix ${run_accession}.vcf.gz
