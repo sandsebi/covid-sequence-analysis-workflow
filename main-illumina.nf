@@ -97,17 +97,13 @@ process map_to_reference {
     tabix ${run_accession}.vcf.gz
     bcftools stats ${run_accession}.vcf.gz > ${run_accession}.stat
     # snpEff -q -no-downstream -no-upstream -noStats NC_045512.2 ${run_accession}.vcf > ${run_accession}.annot.vcf
-    # vcf_to_consensus.py -dp 10 -af 0.25 -v ${run_accession}.vcf.gz -d ${run_accession}.coverage -o ${run_accession}_consensus.fasta -n ${run_accession} -r ${sars2_fasta}
     vcf_to_consensus.py -dp 10 -af 0.25 -v ${run_accession}.vcf.gz -d ${run_accession}.coverage -o headless_consensus.fasta -n ${run_accession} -r ${sars2_fasta}
     
     fix_consensus_header.py headless_consensus.fasta > ${run_accession}_consensus.fasta
     bgzip ${run_accession}_consensus.fasta
-    #java -Xmx4g -jar /opt/conda/share/snpeff-5.0-1/snpEff.jar -q -no-downstream -no-upstream -noStats MT903344.1 ${run_accession}.vcf > ${run_accession}.annot.vcf
-    #bgzip ${run_accession}.vcf
-    #bgzip ${run_accession}.annot.vcf
+    
     mkdir -p ${run_accession}_output
     mv ${run_accession}_trim_summary ${run_accession}.bam ${run_accession}.coverage ${run_accession}.stat ${run_accession}.vcf.gz ${run_accession}_consensus.fasta.gz ${run_accession}_output
-    #mv ${run_accession}.bam ${run_accession}.coverage.gz ${run_accession}.annot.vcf.gz ${run_accession}_output
     tar -zcvf ${run_accession}_output.tar.gz ${run_accession}_output
     """
 }
