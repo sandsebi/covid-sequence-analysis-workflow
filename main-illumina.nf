@@ -103,7 +103,7 @@ process map_to_reference {
     bgzip ${run_accession}_consensus.fasta
     
     mkdir -p ${run_accession}_output
-    mv ${run_accession}_trim_summary ${run_accession}.bam ${run_accession}.coverage ${run_accession}.stat ${run_accession}.vcf.gz ${run_accession}_consensus.fasta.gz ${run_accession}_output
+    mv ${run_accession}_trim_summary ${run_accession}.bam ${run_accession}.coverage ${run_accession}.stat ${run_accession}.vcf.gz ${run_accession}_output
     tar -zcvf ${run_accession}_output.tar.gz ${run_accession}_output
     """
 }
