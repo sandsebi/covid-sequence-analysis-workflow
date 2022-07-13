@@ -13,18 +13,18 @@
 //params.OUTDIR = "/hps/nobackup/cochrane/ena/users/sands/100/1k/results"
 //params.NXF_HOME = "/hps/nobackup/cochrane/ena/users/sands/1k"
 
-params.INDEX = "gs://sands-nf-tower/test_sync_5.tsv"
+params.INDEX = "gs://sands-nf-tower/2Nanopore.tsv"
 params.STOREDIR = "gs://sands-nf-tower/storeDir"
 params.OUTDIR = "gs://sands-nf-tower/results"
 params.CONFIG_YAML = "gs://sands-nf-tower/config.yaml"
 
-params.SARS2_FA = "gs://prj-int-dev-covid19-nf-gls/data/NC_045512.2.fa"
+params.SARS2_FA = "gs://sands-nf-tower/data/MT903344.1.fasta"
 params.SARS2_FA_FAI = "gs://prj-int-dev-covid19-nf-gls/data/NC_045512.2.fa.fai"
 params.SECRETS = "gs://prj-int-dev-covid19-nf-gls/data/projects_accounts.csv"
 
 params.STUDY = 'PRJEB45555'
 params.TEST_SUBMISSION = 'true'
-params.ASYNC_FLAG = 'false'
+params.ASYNC_FLAG = 'true'
 
 //import nextflow.splitter.CsvSplitter
 nextflow.enable.dsl = 2
@@ -60,6 +60,7 @@ process map_to_reference {
     val(run_accession)
     val(sample_accession)
     file("${run_accession}_output.tar.gz")
+    file("${run_accession}_elte_output.tar.gz")
     file("${run_accession}_filtered.vcf.gz")
     file("${run_accession}_consensus.fasta.gz")
 
@@ -88,12 +89,16 @@ process map_to_reference {
     fix_consensus_header.py headless_consensus.fasta > ${run_accession}_consensus.fasta
     bgzip ${run_accession}.coverage
     bgzip ${run_accession}_consensus.fasta
-    java -Xmx4g -jar /opt/conda/share/snpeff-5.0-1/snpEff.jar -q -no-downstream -no-upstream -noStats NC_045512.2 ${run_accession}.vcf > ${run_accession}.annot.vcf
+    #java -Xmx4g -jar /opt/conda/share/snpeff-5.0-1/snpEff.jar -q -no-downstream -no-upstream -noStats NC_045512.2 ${run_accession}.vcf > ${run_accession}.annot.vcf
     bgzip ${run_accession}.vcf
-    bgzip ${run_accession}.annot.vcf
+    #bgzip ${run_accession}.annot.vcf
     mkdir -p ${run_accession}_output
-    mv ${run_accession}.bam ${run_accession}.coverage.gz ${run_accession}.annot.vcf.gz ${run_accession}_output
+    #This is done to separately submit .coverage and .annot.vcf files for ELTE to download
+    mkdir -p ${run_accession}_elte_output
+    cp ${run_accession}.vcf.gz ${run_accession}.coverage.gz ${run_accession}_elte_output
+    mv ${run_accession}.bam ${run_accession}.coverage.gz ${run_accession}_output
     tar -zcvf ${run_accession}_output.tar.gz ${run_accession}_output
+    tar -zcvf ${run_accession}_elte_output.tar.gz ${run_accession}_elte_output
     """
 }
 
