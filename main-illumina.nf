@@ -91,9 +91,7 @@ process map_to_reference {
     lofreq indelqual --dindel ${run_accession}.bam -f ${sars2_fasta} -o ${run_accession}_fixed.bam
     samtools index ${run_accession}_fixed.bam
     lofreq call-parallel --no-default-filter --call-indels --pp-threads ${task.cpus} -f ${sars2_fasta} -o ${run_accession}.vcf ${run_accession}_fixed.bam
-    sleep 10
     lofreq filter --af-min 0.25 -i ${run_accession}.vcf -o ${run_accession}_filtered.vcf
-    sleep 10
     bgzip ${run_accession}.vcf
     bgzip ${run_accession}_filtered.vcf
     tabix ${run_accession}.vcf.gz
@@ -103,13 +101,12 @@ process map_to_reference {
     vcf_to_consensus.py -dp 10 -af 0.25 -v ${run_accession}.vcf.gz -d ${run_accession}.coverage -o headless_consensus.fasta -n ${run_accession} -r ${sars2_fasta}
     
     fix_consensus_header.py headless_consensus.fasta > ${run_accession}_consensus.fasta
-    bgzip ${run_accession}.coverage
     bgzip ${run_accession}_consensus.fasta
     #java -Xmx4g -jar /opt/conda/share/snpeff-5.0-1/snpEff.jar -q -no-downstream -no-upstream -noStats MT903344.1 ${run_accession}.vcf > ${run_accession}.annot.vcf
     #bgzip ${run_accession}.vcf
     #bgzip ${run_accession}.annot.vcf
     mkdir -p ${run_accession}_output
-    mv ${run_accession}_trim_summary ${run_accession}.bam ${run_accession}.coverage ${run_accession}.stat ${run_accession}.vcf.gz ${run_accession}_output
+    mv ${run_accession}_trim_summary ${run_accession}.bam ${run_accession}.coverage ${run_accession}.stat ${run_accession}.vcf.gz ${run_accession}_consensus.fasta.gz ${run_accession}_output
     #mv ${run_accession}.bam ${run_accession}.coverage.gz ${run_accession}.annot.vcf.gz ${run_accession}_output
     tar -zcvf ${run_accession}_output.tar.gz ${run_accession}_output
     """
