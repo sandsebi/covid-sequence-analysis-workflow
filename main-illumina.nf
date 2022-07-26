@@ -13,14 +13,14 @@
 //params.OUTDIR = "/hps/nobackup/cochrane/ena/users/sands/100/1k/results"
 //params.NXF_HOME = "/hps/nobackup/cochrane/ena/users/sands/1k"
 
-params.INDEX = "gs://sands-nf-tower/illumina5.tsv"
+params.INDEX = "gs://sands-nf-tower/illumina2.tsv"
 params.STOREDIR = "gs://sands-nf-tower/storeDir"
 params.OUTDIR = "gs://sands-nf-tower/results"
 params.CONFIG_YAML = "gs://sands-nf-tower/config.yaml"
 
 params.SARS2_FA = "gs://sands-nf-tower/data/data_NC_045512.2.fa"
-params.SARS2_FA_FAI = "gs://prj-int-dev-covid19-nf-gls/data/data_NC_045512.2.fa.fai"
-params.SECRETS = "gs://prj-int-dev-covid19-nf-gls/data/projects_accounts.csv"
+params.SARS2_FA_FAI = "gs://sands-nf-tower/data/data_NC_045512.2.fa.fai"
+params.SECRETS = "gs://sands-nf-tower/data/data_projects_accounts.csv"
 
 params.STUDY = 'PRJEB45555'
 params.TEST_SUBMISSION = 'true'
@@ -104,14 +104,14 @@ process map_to_reference {
     bgzip ${run_accession}_consensus.fasta
     
     mkdir -p ${run_accession}_output
-    mv ${run_accession}_trim_summary ${run_accession}.bam ${run_accession}.coverage ${run_accession}.stat ${run_accession}.vcf.gz ${run_accession}.annot.vcf ${run_accession}_output
-    tar -zcvf ${run_accession}_output.tar.gz ${run_accession}_output
     #Custom ELTE code start
     #This is done to separately submit .coverage and .vcf files for ELTE to download
     mkdir -p ${run_accession}_elte_output
-    cp ${run_accession}.vcf.gz ${run_accession}.coverage.gz ${run_accession}_elte_output
+    cp ${run_accession}.vcf.gz ${run_accession}.coverage ${run_accession}_elte_output
     tar -zcvf ${run_accession}_elte_output.tar.gz ${run_accession}_elte_output
     #Custom ELTE code ends
+    mv ${run_accession}_trim_summary ${run_accession}.bam ${run_accession}.coverage ${run_accession}.stat ${run_accession}.vcf.gz ${run_accession}.annot.vcf ${run_accession}_output
+    tar -zcvf ${run_accession}_output.tar.gz ${run_accession}_output
     """
 }
 
