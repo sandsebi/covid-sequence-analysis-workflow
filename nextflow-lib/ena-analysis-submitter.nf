@@ -35,11 +35,11 @@ process ena_analysis_submit {
     cp ${config_yaml} ${run_accession}_output/${study_accession}
 
     if [ "${study_accession}" = 'PRJEB45555' ]; then
-        analysis_submission.py -t ${test_submission} -o ${run_accession}_output/${study_accession} -p PRJEB43947 -s ${sample_accession} -r ${run_accession} -f ${output_tgz} -a PATHOGEN_ANALYSIS -au \${webin_id} -ap \${webin_password} -as \${async_flag}
+        analysis_submission.py -t ${test_submission} -o ${run_accession}_output/${study_accession} -p PRJEB55349 -s ${sample_accession} -r ${run_accession} -f ${output_tgz} -a PATHOGEN_ANALYSIS -au \${webin_id} -ap \${webin_password} -as \${async_flag}
         #The project is hardcoded to something else specifically for ELTE
-        analysis_submission.py -t ${test_submission} -o ${run_accession}_output/${study_accession} -p PRJEB54593 -s ${sample_accession} -r ${run_accession} -f ${elte_output_tgz} -a PATHOGEN_ANALYSIS -au \${webin_id} -ap \${webin_password} -as \${async_flag}
-        analysis_submission.py -t ${test_submission} -o ${run_accession}_output/${study_accession} -p PRJEB45554 -s ${sample_accession} -r ${run_accession} -f ${filtered_vcf_gz} -a COVID19_FILTERED_VCF -au \${webin_id} -ap \${webin_password} -as \${async_flag}
-        analysis_submission.py -t ${test_submission} -o ${run_accession}_output/${study_accession} -p PRJEB45619 -s ${sample_accession} -r ${run_accession} -f ${consensus_fasta_gz} -a COVID19_CONSENSUS -au \${webin_id} -ap \${webin_password} -as \${async_flag}
+        analysis_submission.py -t ${test_submission} -o ${run_accession}_output/${study_accession} -p PRJEB54593 -s ${sample_accession} -r ${run_accession} -f #${elte_output_tgz} -a PATHOGEN_ANALYSIS -au \${webin_id} -ap \${webin_password} -as \${async_flag}
+        analysis_submission.py -t ${test_submission} -o ${run_accession}_output/${study_accession} -p PRJEB55355 -s ${sample_accession} -r ${run_accession} -f ${filtered_vcf_gz} -a COVID19_FILTERED_VCF -au \${webin_id} -ap \${webin_password} -as \${async_flag}
+        analysis_submission.py -t ${test_submission} -o ${run_accession}_output/${study_accession} -p PRJEB55356 -s ${sample_accession} -r ${run_accession} -f ${consensus_fasta_gz} -a COVID19_CONSENSUS -au \${webin_id} -ap \${webin_password} -as \${async_flag}
     else
         analysis_submission.py -t ${test_submission} -o ${run_accession}_output/${study_accession} -p ${study_accession} -s ${sample_accession} -r ${run_accession} -f ${output_tgz} -a PATHOGEN_ANALYSIS -au \${webin_id} -ap \${webin_password} -as \${async_flag}
         analysis_submission.py -t ${test_submission} -o ${run_accession}_output/${study_accession} -p ${study_accession} -s ${sample_accession} -r ${run_accession} -f ${filtered_vcf_gz} -a COVID19_FILTERED_VCF -au \${webin_id} -ap \${webin_password} -as \${async_flag}

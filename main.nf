@@ -19,11 +19,11 @@ params.OUTDIR = "gs://sands-nf-tower/results"
 params.CONFIG_YAML = "gs://sands-nf-tower/config.yaml"
 
 params.SARS2_FA = "gs://sands-nf-tower/data/data_NC_045512.2.fa"
-params.SARS2_FA_FAI = "gs://prj-int-dev-covid19-nf-gls/data/data_NC_045512.2.fa.fai"
-params.SECRETS = "gs://prj-int-dev-covid19-nf-gls/data/projects_accounts.csv"
+params.SARS2_FA_FAI = "gs://sands-nf-tower/data/data_NC_045512.2.fa.fai"
+params.SECRETS = "gs://sands-nf-tower/data/data_projects_accounts.csv"
 
 params.STUDY = 'PRJEB45555'
-params.TEST_SUBMISSION = 'false'
+params.TEST_SUBMISSION = 'true'
 params.ASYNC_FLAG = 'false'
 
 //import nextflow.splitter.CsvSplitter
@@ -87,18 +87,18 @@ process map_to_reference {
     # vcf2consensus.py -v ${run_accession}_filtered.vcf.gz -d ${run_accession}.coverage -r ${sars2_fasta} -o ${run_accession}_consensus.fasta -dp 30 -n ${run_accession}
     vcf2consensus.py -v ${run_accession}_filtered.vcf.gz -d ${run_accession}.coverage -r ${sars2_fasta} -o headless_consensus.fasta -dp 30 -n ${run_accession}
     fix_consensus_header.py headless_consensus.fasta > ${run_accession}_consensus.fasta
-    bgzip ${run_accession}.coverage
+    #bgzip ${run_accession}.coverage
     bgzip ${run_accession}_consensus.fasta
     java -Xmx4g -jar /opt/conda/share/snpeff-5.0-1/snpEff.jar -q -no-downstream -no-upstream -noStats NC_045512.2 ${run_accession}.vcf > ${run_accession}.annot.vcf
-    bgzip ${run_accession}.vcf
-    bgzip ${run_accession}.annot.vcf
+    #bgzip ${run_accession}.vcf
+    #bgzip ${run_accession}.annot.vcf
     mkdir -p ${run_accession}_output
     #This is done to separately submit .coverage and .annot.vcf files for ELTE to download
-    mkdir -p ${run_accession}_elte_output
-    cp ${run_accession}.vcf.gz ${run_accession}.coverage.gz ${run_accession}_elte_output
-    mv ${run_accession}.bam ${run_accession}.coverage.gz ${run_accession}_output
+    #mkdir -p ${run_accession}_elte_output
+    #cp ${run_accession}.vcf ${run_accession}.coverage ${run_accession}_elte_output
+    mv ${run_accession}.bam ${run_accession}.coverage ${run_accession}.vcf ${run_accession}.annot.vcf ${run_accession}_output
     tar -zcvf ${run_accession}_output.tar.gz ${run_accession}_output
-    tar -zcvf ${run_accession}_elte_output.tar.gz ${run_accession}_elte_output
+    #tar -zcvf ${run_accession}_elte_output.tar.gz ${run_accession}_elte_output
     """
 }
 
