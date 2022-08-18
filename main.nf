@@ -8,13 +8,13 @@ params.SECRETS = "gs://sands-nf-tower/data/projects_accounts.csv"
 //params.STOREDIR = "gs://prj-int-dev-covid19-nf-gls/prepro/storeDir"
 //params.OUTDIR = "gs://prj-int-dev-covid19-nf-gls/prepro/results"
 
-params.INDEX = "gs://sands-nf-tower/single-nanopore.tsv"
+params.INDEX = "gs://sands-nf-tower/two-nanopore.tsv"
 params.STOREDIR = "gs://sands-nf-tower/storeDir"
 params.OUTDIR = "gs://sands-nf-tower/results"
 params.CONFIG_YAML = "gs://sands-nf-tower/config.yaml"
 
 params.STUDY = 'PRJEB45555'
-params.TEST_SUBMISSION = 'true'
+params.TEST_SUBMISSION = 'false'
 
 //import nextflow.splitter.CsvSplitter
 nextflow.enable.dsl = 2
