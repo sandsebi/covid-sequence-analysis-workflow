@@ -13,13 +13,13 @@
 //params.OUTDIR = "/hps/nobackup/cochrane/ena/users/sands/100/1k/results"
 //params.NXF_HOME = "/hps/nobackup/cochrane/ena/users/sands/1k"
 
-params.INDEX = "gs://sands-nf-tower/samples.tsv"
+params.INDEX = "gs://sands-nf-tower/mpvx-nanopore-1.tsv"
 params.STOREDIR = "gs://sands-nf-tower/storeDir"
 params.OUTDIR = "gs://sands-nf-tower/results"
 params.CONFIG_YAML = "gs://sands-nf-tower/config.yaml"
 
-params.SARS2_FA = "gs://sands-nf-tower/data/MT903344.1.fasta"
-params.SARS2_FA_FAI = "gs://sands-nf-tower/data/MN648051.1.fa.fai"
+params.SARS2_FA = "gs://sands-nf-tower/data/NC_063383.1.fasta"
+params.SARS2_FA_FAI = "gs://sands-nf-tower/data/NC_063383.1.fasta.fai"
 params.SECRETS = "gs://prj-int-dev-covid19-nf-gls/data/projects_accounts.csv"
 
 params.STUDY = 'PRJEB45555'
@@ -47,7 +47,7 @@ process map_to_reference {
 
     cpus 4 /* more is better, parallelizes very well*/
     memory '8 GB'
-    container 'sands0/ena-sars-cov2-nanopore:1.0'
+    container 'sands0/ena-sars-cov2-nanopore:1.1'
 
     input:
     tuple val(run_accession), val(sample_accession), file(input_file)
@@ -74,6 +74,10 @@ process map_to_reference {
     else
         wget -t 0 -O ${run_accession}_1.fastq.gz \$(cat ${input_file}) --user=\${ftp_id} --password=\${ftp_password}
     fi
+    apt update
+    apt install curl -y
+    curl --version
+    java -version
     cutadapt -u 30 -u -30 -o ${run_accession}.trimmed.fastq ${run_accession}_1.fastq.gz -m 75 -j ${task.cpus} --quiet
     minimap2 -Y -t ${task.cpus} -x map-ont -a ${sars2_fasta} ${run_accession}.trimmed.fastq | samtools view -bF 4 - | samtools sort -@ ${task.cpus} - > ${run_accession}.bam
     samtools index -@ ${task.cpus} ${run_accession}.bam
@@ -88,12 +92,15 @@ process map_to_reference {
     fix_consensus_header.py headless_consensus.fasta > ${run_accession}_consensus.fasta
     bgzip ${run_accession}.coverage
     bgzip ${run_accession}_consensus.fasta
-    #java -Xmx4g -jar /opt/conda/share/snpeff-5.0-1/snpEff.jar -q -no-downstream -no-upstream -noStats MT903344.1 ${run_accession}.vcf > ${run_accession}.annot.vcf
+    #Build MPXV database
+    #cd /opt/conda/share/snpeff-5.0-1 && ./scripts/buildDbNcbi.sh NC_063383.1
+    #cd -
+    java -Xmx4g -jar /opt/conda/share/snpeff-5.0-1/snpEff.jar -q -no-downstream -no-upstream -noStats NC_063383.1 ${run_accession}.vcf > ${run_accession}.annot.vcf
     bgzip ${run_accession}.vcf
-    #bgzip ${run_accession}.annot.vcf
+    bgzip ${run_accession}.annot.vcf
     mkdir -p ${run_accession}_output
-    mv ${run_accession}.bam ${run_accession}.coverage.gz ${run_accession}_output
-    #mv ${run_accession}.bam ${run_accession}.coverage.gz ${run_accession}.annot.vcf.gz ${run_accession}_output
+    #mv ${run_accession}.bam ${run_accession}.coverage.gz ${run_accession}_output
+    mv ${run_accession}.coverage.gz ${run_accession}_consensus.fasta.gz ${run_accession}.annot.vcf.gz ${run_accession}_output
     tar -zcvf ${run_accession}_output.tar.gz ${run_accession}_output
     """
 }
