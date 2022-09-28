@@ -13,13 +13,13 @@
 //params.OUTDIR = "/hps/nobackup/cochrane/ena/users/sands/100/1k/results"
 //params.NXF_HOME = "/hps/nobackup/cochrane/ena/users/sands/1k"
 
-params.INDEX = "gs://sands-nf-tower/samples_mpvx_1.tsv"
+params.INDEX = "gs://sands-nf-tower/mpvx-illumina-1.tsv"
 params.STOREDIR = "gs://sands-nf-tower/storeDir"
 params.OUTDIR = "gs://sands-nf-tower/results"
 params.CONFIG_YAML = "gs://sands-nf-tower/config.yaml"
 
-params.SARS2_FA = "gs://sands-nf-tower/data/MT903344.1.fasta"
-params.SARS2_FA_FAI = "gs://sands-nf-tower/data/MN648051.1.fa.fai"
+params.SARS2_FA = "gs://sands-nf-tower/data/NC_063383.1.fasta"
+params.SARS2_FA_FAI = "gs://sands-nf-tower/data/NC_063383.1.fasta.fai"
 params.SECRETS = "gs://prj-int-dev-covid19-nf-gls/data/projects_accounts.csv"
 
 params.STUDY = 'PRJEB45555'
@@ -47,7 +47,7 @@ process map_to_reference {
 
     cpus 8
     memory '8 GB'
-    container 'davidyuyuan/ena-sars-cov2-illumina:2.0'
+    container 'sands0/ena-sars-cov2-illumina:1.0'
 
     input:
     tuple val(run_accession), val(sample_accession), file(input_file_1), file(input_file_2)
