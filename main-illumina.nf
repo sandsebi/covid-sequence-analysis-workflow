@@ -13,7 +13,7 @@
 //params.OUTDIR = "/hps/nobackup/cochrane/ena/users/sands/100/1k/results"
 //params.NXF_HOME = "/hps/nobackup/cochrane/ena/users/sands/1k"
 
-params.INDEX = "gs://sands-nf-tower/mpvx-illumina-1.tsv"
+params.INDEX = "gs://sands-nf-tower/mpvx-illumina-2.tsv"
 params.STOREDIR = "gs://sands-nf-tower/storeDir"
 params.OUTDIR = "gs://sands-nf-tower/results"
 params.CONFIG_YAML = "gs://sands-nf-tower/config.yaml"
@@ -23,7 +23,7 @@ params.SARS2_FA_FAI = "gs://sands-nf-tower/data/NC_063383.1.fasta.fai"
 params.SECRETS = "gs://prj-int-dev-covid19-nf-gls/data/projects_accounts.csv"
 
 params.STUDY = 'PRJEB45555'
-params.TEST_SUBMISSION = 'true'
+params.TEST_SUBMISSION = 'false'
 params.ASYNC_FLAG = 'false'
 
 //import nextflow.splitter.CsvSplitter
