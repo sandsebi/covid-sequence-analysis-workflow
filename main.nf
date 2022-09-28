@@ -74,10 +74,6 @@ process map_to_reference {
     else
         wget -t 0 -O ${run_accession}_1.fastq.gz \$(cat ${input_file}) --user=\${ftp_id} --password=\${ftp_password}
     fi
-    apt update
-    apt install curl -y
-    curl --version
-    java -version
     cutadapt -u 30 -u -30 -o ${run_accession}.trimmed.fastq ${run_accession}_1.fastq.gz -m 75 -j ${task.cpus} --quiet
     minimap2 -Y -t ${task.cpus} -x map-ont -a ${sars2_fasta} ${run_accession}.trimmed.fastq | samtools view -bF 4 - | samtools sort -@ ${task.cpus} - > ${run_accession}.bam
     samtools index -@ ${task.cpus} ${run_accession}.bam
@@ -100,7 +96,7 @@ process map_to_reference {
     bgzip ${run_accession}.annot.vcf
     mkdir -p ${run_accession}_output
     #mv ${run_accession}.bam ${run_accession}.coverage.gz ${run_accession}_output
-    mv ${run_accession}.coverage.gz ${run_accession}_consensus.fasta.gz ${run_accession}.annot.vcf.gz ${run_accession}_output
+    mv ${run_accession}.bam ${run_accession}.coverage.gz ${run_accession}.annot.vcf.gz ${run_accession}_output
     tar -zcvf ${run_accession}_output.tar.gz ${run_accession}_output
     """
 }
