@@ -23,7 +23,7 @@ params.SARS2_FA_FAI = "gs://sands-nf-tower/data/NC_063383.1.fasta.fai"
 params.SECRETS = "gs://prj-int-dev-covid19-nf-gls/data/projects_accounts.csv"
 
 params.STUDY = 'PRJEB45555'
-params.TEST_SUBMISSION = 'false'
+params.TEST_SUBMISSION = 'true'
 params.ASYNC_FLAG = 'false'
 
 //import nextflow.splitter.CsvSplitter
@@ -59,7 +59,9 @@ process map_to_reference {
     output:
     val(run_accession)
     val(sample_accession)
-    file("${run_accession}_output.tar.gz")
+    file("${run_accession}.bam")
+    file("${run_accession}.coverage.gz")
+    file("${run_accession}.annot.vcf.gz")
     file("${run_accession}_filtered.vcf.gz")
     file("${run_accession}_consensus.fasta.gz")
 
@@ -96,15 +98,17 @@ process map_to_reference {
     bgzip ${run_accession}_filtered.vcf
     tabix ${run_accession}.vcf.gz
     bcftools stats ${run_accession}.vcf.gz > ${run_accession}.stat
-    # snpEff -q -no-downstream -no-upstream -noStats NC_045512.2 ${run_accession}.vcf > ${run_accession}.annot.vcf
+    java -Xmx4g -jar /opt/conda/share/snpeff-5.0-1/snpEff.jar -q -no-downstream -no-upstream -noStats NC_063383.1 ${run_accession}.vcf > ${run_accession}.annot.vcf
     vcf_to_consensus.py -dp 10 -af 0.25 -v ${run_accession}.vcf.gz -d ${run_accession}.coverage -o headless_consensus.fasta -n ${run_accession} -r ${sars2_fasta}
     
     fix_consensus_header.py headless_consensus.fasta > ${run_accession}_consensus.fasta
     bgzip ${run_accession}_consensus.fasta
+    bgzip ${run_accession}.coverage
+    bgzip ${run_accession}.annot.vcf
     
-    mkdir -p ${run_accession}_output
-    mv ${run_accession}_trim_summary ${run_accession}.bam ${run_accession}.coverage ${run_accession}.stat ${run_accession}.vcf.gz ${run_accession}_output
-    tar -zcvf ${run_accession}_output.tar.gz ${run_accession}_output
+    #mkdir -p ${run_accession}_output
+    #mv ${run_accession}_trim_summary ${run_accession}.bam ${run_accession}.coverage ${run_accession}.stat ${run_accession}.vcf.gz ${run_accession}_output
+    #tar -zcvf ${run_accession}_output.tar.gz ${run_accession}_output
     """
 }
 

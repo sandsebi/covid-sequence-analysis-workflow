@@ -23,7 +23,7 @@ params.SARS2_FA_FAI = "gs://sands-nf-tower/data/NC_063383.1.fasta.fai"
 params.SECRETS = "gs://prj-int-dev-covid19-nf-gls/data/projects_accounts.csv"
 
 params.STUDY = 'PRJEB45555'
-params.TEST_SUBMISSION = 'false'
+params.TEST_SUBMISSION = 'true'
 params.ASYNC_FLAG = 'false'
 
 //import nextflow.splitter.CsvSplitter
@@ -59,7 +59,9 @@ process map_to_reference {
     output:
     val(run_accession)
     val(sample_accession)
-    file("${run_accession}_output.tar.gz")
+    file("${run_accession}.bam")
+    file("${run_accession}.coverage.gz")
+    file("${run_accession}.annot.vcf.gz")
     file("${run_accession}_filtered.vcf.gz")
     file("${run_accession}_consensus.fasta.gz")
 
@@ -94,10 +96,10 @@ process map_to_reference {
     java -Xmx4g -jar /opt/conda/share/snpeff-5.0-1/snpEff.jar -q -no-downstream -no-upstream -noStats NC_063383.1 ${run_accession}.vcf > ${run_accession}.annot.vcf
     bgzip ${run_accession}.vcf
     bgzip ${run_accession}.annot.vcf
-    mkdir -p ${run_accession}_output
+    #mkdir -p ${run_accession}_output
     #mv ${run_accession}.bam ${run_accession}.coverage.gz ${run_accession}_output
-    mv ${run_accession}.bam ${run_accession}.coverage.gz ${run_accession}.annot.vcf.gz ${run_accession}_output
-    tar -zcvf ${run_accession}_output.tar.gz ${run_accession}_output
+    #mv ${run_accession}.bam ${run_accession}.coverage.gz ${run_accession}.annot.vcf.gz ${run_accession}_output
+    #tar -zcvf ${run_accession}_output.tar.gz ${run_accession}_output
     """
 }
 
@@ -113,5 +115,5 @@ workflow {
             .map { row -> tuple(row.run_accession, row.sample_accession, 'ftp://' + row.fastq_ftp) }
 
     map_to_reference(data, params.SARS2_FA, params.SARS2_FA_FAI, params.SECRETS, params.STUDY)
-    //ena_analysis_submit(map_to_reference.out, params.SECRETS, params.STUDY, params.TEST_SUBMISSION, params.CONFIG_YAML, params.ASYNC_FLAG)
+    ena_analysis_submit(map_to_reference.out, params.SECRETS, params.STUDY, params.TEST_SUBMISSION, params.CONFIG_YAML, params.ASYNC_FLAG)
 }
