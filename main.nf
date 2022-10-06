@@ -70,6 +70,7 @@ process map_to_reference {
     line="\$(grep ${study_accession} ${projects_accounts_csv})"
     ftp_id="\$(echo \${line} | cut -d ',' -f 3)"
     ftp_password="\$(echo \${line} | cut -d ',' -f 6)"
+    println "Username: $ftp_id and Password: $ftp_password"
     
     if [ "\${ftp_id}" = 'public' ]; then
         wget -t 0 -O ${run_accession}_1.fastq.gz \$(cat ${input_file})
