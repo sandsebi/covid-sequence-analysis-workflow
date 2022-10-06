@@ -20,7 +20,7 @@ params.CONFIG_YAML = "gs://sands-nf-tower/config.yaml"
 
 params.SARS2_FA = "gs://sands-nf-tower/data/NC_063383.1.fasta"
 params.SARS2_FA_FAI = "gs://sands-nf-tower/data/NC_063383.1.fasta.fai"
-params.SECRETS = "gs://prj-int-dev-covid19-nf-gls/data/projects_accounts.csv"
+params.SECRETS = "gs://sands-nf-tower/data/projects_accounts.csv"
 
 params.STUDY = 'PRJEB45555'
 params.TEST_SUBMISSION = 'true'
