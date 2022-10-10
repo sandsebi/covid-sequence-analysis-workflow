@@ -47,7 +47,7 @@ process map_to_reference {
 
     cpus 8
     memory '8 GB'
-    container 'sands0/ena-sars-cov2-illumina:1.0'
+    container 'sands0/ena-sars-cov2-illumina:1.1'
 
     input:
     tuple val(run_accession), val(sample_accession), file(input_file_1), file(input_file_2)
@@ -79,6 +79,10 @@ process map_to_reference {
         wget -t 0 -O ${run_accession}_1.fastq.gz \$(cat ${input_file_1}) --user=\${ftp_id} --password=\${ftp_password}
         wget -t 0 -O ${run_accession}_2.fastq.gz \$(cat ${input_file_2}) --user=\${ftp_id} --password=\${ftp_password}
     fi
+    #Build MPXV database 
+    cd /opt/conda/share/snpeff-5.0-1
+    ./scripts/buildDbNcbi.sh NC_063383.1
+    cd -
     trimmomatic PE ${run_accession}_1.fastq.gz ${run_accession}_2.fastq.gz ${run_accession}_trim_1.fq \
     ${run_accession}_trim_1_un.fq ${run_accession}_trim_2.fq ${run_accession}_trim_2_un.fq \
     -summary ${run_accession}_trim_summary -threads ${task.cpus} \
@@ -99,6 +103,7 @@ process map_to_reference {
     bgzip ${run_accession}_filtered.vcf
     tabix ${run_accession}.vcf.gz
     bcftools stats ${run_accession}.vcf.gz > ${run_accession}.stat
+    
     java -Xmx4g -jar /opt/conda/share/snpeff-5.0-1/snpEff.jar -q -no-downstream -no-upstream -noStats NC_063383.1 ${run_accession}.vcf > ${run_accession}.annot.vcf
     vcf_to_consensus.py -dp 10 -af 0.25 -v ${run_accession}.vcf.gz -d ${run_accession}.coverage -o headless_consensus.fasta -n ${run_accession} -r ${sars2_fasta}
     

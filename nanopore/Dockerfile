@@ -10,5 +10,5 @@ COPY bin/* /usr/local/bin/
 
 USER root
 RUN apt update && apt install curl -y
-RUN cd /opt/conda/share/snpeff-5.0-1 && ./scripts/buildDbNcbi.sh NC_063383.1
+#RUN cd /opt/conda/share/snpeff-5.0-1 && ./scripts/buildDbNcbi.sh NC_063383.1 && cd -
 #RUN java -Xmx4g -jar /opt/conda/share/snpeff-5.0-1/snpEff.jar download NC_063383.1

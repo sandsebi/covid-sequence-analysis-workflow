@@ -77,6 +77,12 @@ process map_to_reference {
     else
         wget -t 0 -O ${run_accession}_1.fastq.gz \$(cat ${input_file}) --user=\${ftp_id} --password=\${ftp_password}
     fi
+    #Build MPXV database
+    pwd
+    cd /opt/conda/share/snpeff-5.0-1
+    ./scripts/buildDbNcbi.sh NC_063383.1
+    cd -
+    pwd
     cutadapt -u 30 -u -30 -o ${run_accession}.trimmed.fastq ${run_accession}_1.fastq.gz -m 75 -j ${task.cpus} --quiet
     minimap2 -Y -t ${task.cpus} -x map-ont -a ${sars2_fasta} ${run_accession}.trimmed.fastq | samtools view -bF 4 - | samtools sort -@ ${task.cpus} - > ${run_accession}.bam
     samtools index -@ ${task.cpus} ${run_accession}.bam
@@ -91,9 +97,6 @@ process map_to_reference {
     fix_consensus_header.py headless_consensus.fasta > ${run_accession}_consensus.fasta
     bgzip ${run_accession}.coverage
     bgzip ${run_accession}_consensus.fasta
-    #Build MPXV database
-    #cd /opt/conda/share/snpeff-5.0-1 && ./scripts/buildDbNcbi.sh NC_063383.1
-    #cd -
     java -Xmx4g -jar /opt/conda/share/snpeff-5.0-1/snpEff.jar -q -no-downstream -no-upstream -noStats NC_063383.1 ${run_accession}.vcf > ${run_accession}.annot.vcf
     bgzip ${run_accession}.vcf
     bgzip ${run_accession}.annot.vcf
