@@ -3,7 +3,7 @@ process ena_analysis_submit {
     publishDir params.OUTDIR, mode: 'copy'
     storeDir params.STOREDIR
 
-    container 'sands0/ena-analysis-submitter:2.2'
+    container 'sands0/ena-analysis-submitter:2.3'
 
     input:
     val(run_accession)
@@ -40,13 +40,13 @@ process ena_analysis_submit {
     if [ "${study_accession}" = 'PRJEB45555' ]; then
         echo "Webin Username: \${webin_id} and Password: \${webin_password}"
         analysis_submission.py -t ${test_submission} -o ${run_accession}_output/${study_accession} -p PRJEB55825 -s ${sample_accession} -r ${run_accession} -f ${output_bam},${output_coverage_gz},${output_annot_vcf_gz} -a PATHOGEN_ANALYSIS -au \${webin_id} -ap \${webin_password} -as \${async_flag}
-        analysis_submission.py -t ${test_submission} -o ${run_accession}_output/${study_accession} -p PRJEB55823 -s ${sample_accession} -r ${run_accession} -f ${filtered_vcf_gz} -a COVID19_FILTERED_VCF -au \${webin_id} -ap \${webin_password} -as \${async_flag}
-        analysis_submission.py -t ${test_submission} -o ${run_accession}_output/${study_accession} -p PRJEB55824 -s ${sample_accession} -r ${run_accession} -f ${consensus_fasta_gz} -a COVID19_CONSENSUS -au \${webin_id} -ap \${webin_password} -as \${async_flag}
+        analysis_submission.py -t ${test_submission} -o ${run_accession}_output/${study_accession} -p PRJEB55823 -s ${sample_accession} -r ${run_accession} -f ${filtered_vcf_gz} -a FILTERED_VARIATION -au \${webin_id} -ap \${webin_password} -as \${async_flag}
+        analysis_submission.py -t ${test_submission} -o ${run_accession}_output/${study_accession} -p PRJEB55824 -s ${sample_accession} -r ${run_accession} -f ${consensus_fasta_gz} -a SEQUENCE_CONSENSUS -au \${webin_id} -ap \${webin_password} -as \${async_flag}
     else
         echo "Webin Username: \${webin_id} and Password: \${webin_password}"
         analysis_submission.py -t ${test_submission} -o ${run_accession}_output/${study_accession} -p ${study_accession} -s ${sample_accession} -r ${run_accession} -f ${output_bam},${output_coverage_gz},${output_annot_vcf_gz} -a PATHOGEN_ANALYSIS -au \${webin_id} -ap \${webin_password} -as \${async_flag}
-        analysis_submission.py -t ${test_submission} -o ${run_accession}_output/${study_accession} -p ${study_accession} -s ${sample_accession} -r ${run_accession} -f ${filtered_vcf_gz} -a COVID19_FILTERED_VCF -au \${webin_id} -ap \${webin_password} -as \${async_flag}
-        analysis_submission.py -t ${test_submission} -o ${run_accession}_output/${study_accession} -p ${study_accession} -s ${sample_accession} -r ${run_accession} -f ${consensus_fasta_gz} -a COVID19_CONSENSUS -au \${webin_id} -ap \${webin_password} -as \${async_flag}
+        analysis_submission.py -t ${test_submission} -o ${run_accession}_output/${study_accession} -p ${study_accession} -s ${sample_accession} -r ${run_accession} -f ${filtered_vcf_gz} -a FILTERED_VARIATION -au \${webin_id} -ap \${webin_password} -as \${async_flag}
+        analysis_submission.py -t ${test_submission} -o ${run_accession}_output/${study_accession} -p ${study_accession} -s ${sample_accession} -r ${run_accession} -f ${consensus_fasta_gz} -a SEQUENCE_CONSENSUS -au \${webin_id} -ap \${webin_password} -as \${async_flag}
     fi
     mv ${output_bam} ${output_coverage_gz} ${output_annot_vcf_gz} ${filtered_vcf_gz} ${consensus_fasta_gz} ${run_accession}_output/${study_accession}
     mv ${run_accession}_output/${study_accession}/successful_submissions.txt ${run_accession}_output/${study_accession}/${run_accession}_submissions.txt
