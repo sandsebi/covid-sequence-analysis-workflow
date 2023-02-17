@@ -1,8 +1,21 @@
 #!/usr/bin/env nextflow
 
-params.INDEX = "gs://prj-int-dev-covid19-nf-gls/prepro/illumina.index.tsv"
-params.STOREDIR = "gs://prj-int-dev-covid19-nf-gls/prepro/storeDir"
-params.OUTDIR = "gs://prj-int-dev-covid19-nf-gls/prepro/results"
+//params.INDEX = "gs://prj-int-dev-covid19-nf-gls/prepro/illumina.index.tsv"
+//params.STOREDIR = "gs://prj-int-dev-covid19-nf-gls/prepro/storeDir"
+//params.OUTDIR = "gs://prj-int-dev-covid19-nf-gls/prepro/results"
+
+params.INDEX = "gs://sands-nf-tower/illumina5.tsv"
+params.STOREDIR = "gs://sands-nf-tower/storeDir"
+params.OUTDIR = "gs://sands-nf-tower/results"
+params.CONFIG_YAML = "gs://sands-nf-tower/config.yaml"
+
+//params.SARS2_FA = "gs://sands-nf-tower/data/NC_063383.1.fasta"
+//params.SARS2_FA_FAI = "gs://sands-nf-tower/data/NC_063383.1.fasta.fai"
+
+
+params.SARS2_FA = "gs://sands-nf-tower/data/NC_045512.2.fa"
+params.SARS2_FA_FAI = "gs://sands-nf-tower/data/NC_045512.2.fa.fai"
+params.SECRETS = "gs://sands-nf-tower/data/projects_accounts.csv"
 
 params.STUDY = 'PRJEB45555'
 params.TEST_SUBMISSION = 'true'
@@ -14,10 +27,10 @@ process map_to_reference {
 
     cpus 8
     memory '8 GB'
-    container 'davidyuyuan/ena-sars-cov2-illumina:2.0'
+    container 'sands0/ena-sars-cov2-illumina:1.1'
 
     input:
-    tuple val(run_accession), val(sample_accession), file(input_file_1), file(input_file_2) //from samples_ch
+    tuple val(run_accession), val(sample_accession), file(input_file_1), file(input_file_2)
     path(sars2_fasta)
     path(sars2_fasta_fai)
     path(projects_accounts_csv)
@@ -26,7 +39,9 @@ process map_to_reference {
     output:
     val(run_accession)
     val(sample_accession)
-    file("${run_accession}_output.tar.gz")
+    file("${run_accession}.bam")
+    file("${run_accession}.coverage.gz")
+    file("${run_accession}.annot.vcf.gz")
     file("${run_accession}_filtered.vcf.gz")
     file("${run_accession}_consensus.fasta.gz")
 
@@ -35,6 +50,7 @@ process map_to_reference {
     line="\$(grep ${study_accession} ${projects_accounts_csv})"
     ftp_id="\$(echo \${line} | cut -d ',' -f 3)"
     ftp_password="\$(echo \${line} | cut -d ',' -f 6)"
+    echo "Username: \${ftp_id} and Password: \${ftp_password}"
     
     if [ "\${ftp_id}" = 'public' ]; then
         wget -t 0 -O ${run_accession}_1.fastq.gz \$(cat ${input_file_1})
@@ -43,20 +59,18 @@ process map_to_reference {
         wget -t 0 -O ${run_accession}_1.fastq.gz \$(cat ${input_file_1}) --user=\${ftp_id} --password=\${ftp_password}
         wget -t 0 -O ${run_accession}_2.fastq.gz \$(cat ${input_file_2}) --user=\${ftp_id} --password=\${ftp_password}
     fi
+    
     trimmomatic PE ${run_accession}_1.fastq.gz ${run_accession}_2.fastq.gz ${run_accession}_trim_1.fq \
     ${run_accession}_trim_1_un.fq ${run_accession}_trim_2.fq ${run_accession}_trim_2_un.fq \
     -summary ${run_accession}_trim_summary -threads ${task.cpus} \
     SLIDINGWINDOW:5:30 MINLEN:50
-
     bwa index ${sars2_fasta}
     bwa mem -t ${task.cpus} ${sars2_fasta} ${run_accession}_trim_1.fq ${run_accession}_trim_2.fq | samtools view -bF 4 - | samtools sort - > ${run_accession}_paired.bam
     bwa mem -t ${task.cpus} ${sars2_fasta} <(cat ${run_accession}_trim_1_un.fq ${run_accession}_trim_2_un.fq) | samtools view -bF 4 - | samtools sort - > ${run_accession}_unpaired.bam
     samtools merge ${run_accession}.bam ${run_accession}_paired.bam ${run_accession}_unpaired.bam
-    rm ${run_accession}_paired.bam ${run_accession}_unpaired.bam
-
+    rm -rf ${run_accession}_paired.bam ${run_accession}_unpaired.bam
     samtools mpileup -a -A -Q 30 -d 8000 -f ${sars2_fasta} ${run_accession}.bam > ${run_accession}.pileup
     cat ${run_accession}.pileup | awk '{print \$2,","\$3,","\$4}' > ${run_accession}.coverage
-
     samtools index ${run_accession}.bam
     lofreq indelqual --dindel ${run_accession}.bam -f ${sars2_fasta} -o ${run_accession}_fixed.bam
     samtools index ${run_accession}_fixed.bam
@@ -68,14 +82,16 @@ process map_to_reference {
     bcftools stats ${run_accession}.vcf.gz > ${run_accession}.stat
 
     snpEff -q -no-downstream -no-upstream -noStats NC_045512.2 ${run_accession}.vcf > ${run_accession}.annot.vcf
-    # vcf_to_consensus.py -dp 10 -af 0.25 -v ${run_accession}.vcf.gz -d ${run_accession}.coverage -o ${run_accession}_consensus.fasta -n ${run_accession} -r ${sars2_fasta}
     vcf_to_consensus.py -dp 10 -af 0.25 -v ${run_accession}.vcf.gz -d ${run_accession}.coverage -o headless_consensus.fasta -n ${run_accession} -r ${sars2_fasta}
+    
     fix_consensus_header.py headless_consensus.fasta > ${run_accession}_consensus.fasta
     bgzip ${run_accession}_consensus.fasta
-
-    mkdir -p ${run_accession}_output
-    mv ${run_accession}_trim_summary ${run_accession}.annot.vcf ${run_accession}.bam ${run_accession}.coverage ${run_accession}.stat ${run_accession}.vcf.gz ${run_accession}_output
-    tar -zcvf ${run_accession}_output.tar.gz ${run_accession}_output
+    bgzip ${run_accession}.coverage
+    bgzip ${run_accession}.annot.vcf
+    
+    #mkdir -p ${run_accession}_output
+    #mv ${run_accession}_trim_summary ${run_accession}.bam ${run_accession}.coverage ${run_accession}.stat ${run_accession}.vcf.gz ${run_accession}_output
+    #tar -zcvf ${run_accession}_output.tar.gz ${run_accession}_output
     """
 }
 
