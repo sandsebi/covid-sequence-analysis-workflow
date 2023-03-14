@@ -9,7 +9,7 @@ If you need to run the pipelines on your on premise HPC cluster or on AWS, the a
 
 1. Have access to a Google Cloud account
 2. Have a Nextflow tower account
-3. Have a list of samples in a .tsv file
+3. Have a list of samples in a .tsv file (Examples of Nanopore and Illumina TSV files can be found in the TSVs folder of the repository)
 
 ### Preparation
 
