@@ -28,7 +28,9 @@ If you need to run the pipelines on your on premise HPC cluster or on AWS, the a
 5. Depending on which pipeline you want to run, add the following in the **Advanced options**:
 	Nanopore - [nanopore/nanopore.nf](https://github.com/sandsebi/covid-sequence-analysis-workflow/blob/demo/nanopore/nanopore.nf)
 	Illumina - [illumina/illumina.nf](https://github.com/sandsebi/covid-sequence-analysis-workflow/blob/demo/illumina/illumina.nf)
+	![Screenshot](doc/img/AdvancedOptions.JPG)
 6. If you make changes to this fork make sure to enable the button to pull latest changes in the **Advanced options**
+	![Screenshot](doc/img/PullLatest.JPG)
 7. Click on **Add** at the bottom right corner
 8. Once your pipeline is ready, make sure your sample file is uploaded on GCP and is at the location the script reads it from:
 	a. For running Nanopore the samples are read from [here](https://github.com/sandsebi/covid-sequence-analysis-workflow/blob/3a24372fa011e7b5ed422a1a61671931f45e9866/nanopore/nanopore.nf#L7)
