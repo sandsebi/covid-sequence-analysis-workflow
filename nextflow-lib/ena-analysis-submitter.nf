@@ -15,7 +15,6 @@ process ena_analysis_submit {
     val(study_accession)
     val(test_submission)
     path(config_yaml)
-    val(async)
 
     output:
     file("${run_accession}_output/${study_accession}/${run_accession}_output.tar.gz")
@@ -38,9 +37,9 @@ process ena_analysis_submit {
         analysis_submission.py -t ${test_submission} -o ${run_accession}_output/${study_accession} -p PRJEB61668 -s ${sample_accession} -r ${run_accession} -f ${filtered_vcf_gz} -a FILTERED_VARIATION -au \${webin_id} -ap \${webin_password}
         analysis_submission.py -t ${test_submission} -o ${run_accession}_output/${study_accession} -p PRJEB61667 -s ${sample_accession} -r ${run_accession} -f ${consensus_fasta_gz} -a SEQUENCE_CONSENSUS -au \${webin_id} -ap \${webin_password}
     else
-        analysis_submission.py -t ${test_submission} -o ${run_accession}_output/${study_accession} -p ${study_accession} -s ${sample_accession} -r ${run_accession} -f ${output_tgz} -a PATHOGEN_ANALYSIS -au \${webin_id} -ap \${webin_password} -as \${async}
-        analysis_submission.py -t ${test_submission} -o ${run_accession}_output/${study_accession} -p ${study_accession} -s ${sample_accession} -r ${run_accession} -f ${filtered_vcf_gz} -a COVID19_FILTERED_VCF -au \${webin_id} -ap \${webin_password} -as \${async}
-        analysis_submission.py -t ${test_submission} -o ${run_accession}_output/${study_accession} -p ${study_accession} -s ${sample_accession} -r ${run_accession} -f ${consensus_fasta_gz} -a COVID19_CONSENSUS -au \${webin_id} -ap \${webin_password} -as \${async}
+        analysis_submission.py -t ${test_submission} -o ${run_accession}_output/${study_accession} -p ${study_accession} -s ${sample_accession} -r ${run_accession} -f ${output_tgz} -a PATHOGEN_ANALYSIS -au \${webin_id} -ap \${webin_password}
+        analysis_submission.py -t ${test_submission} -o ${run_accession}_output/${study_accession} -p ${study_accession} -s ${sample_accession} -r ${run_accession} -f ${filtered_vcf_gz} -a COVID19_FILTERED_VCF -au \${webin_id} -ap \${webin_password}
+        analysis_submission.py -t ${test_submission} -o ${run_accession}_output/${study_accession} -p ${study_accession} -s ${sample_accession} -r ${run_accession} -f ${consensus_fasta_gz} -a COVID19_CONSENSUS -au \${webin_id} -ap \${webin_password}
     fi
     mv ${output_tgz} ${filtered_vcf_gz} ${consensus_fasta_gz} ${run_accession}_output/${study_accession}
     mv ${run_accession}_output/${study_accession}/successful_submissions.txt ${run_accession}_output/${study_accession}/${run_accession}_submissions.txt
