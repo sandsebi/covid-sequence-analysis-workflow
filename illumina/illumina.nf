@@ -4,8 +4,18 @@ params.INDEX = "gs://prj-int-dev-covid19-nf-gls/prepro/illumina.index.tsv"
 params.STOREDIR = "gs://prj-int-dev-covid19-nf-gls/prepro/storeDir"
 params.OUTDIR = "gs://prj-int-dev-covid19-nf-gls/prepro/results"
 
+params.INDEX = "gs://sands-nf-tower/illumina5.tsv"
+params.STOREDIR = "gs://sands-nf-tower/storeDir"
+params.OUTDIR = "gs://sands-nf-tower/results"
+params.CONFIG_YAML = "gs://sands-nf-tower/config.yaml"
+
+params.SARS2_FA = "gs://sands-nf-tower/data/NC_045512.2.fa"
+params.SARS2_FA_FAI = "gs://sands-nf-tower/data/NC_045512.2.fa.fai"
+params.SECRETS = "gs://sands-nf-tower/data/projects_accounts.csv"
+
 params.STUDY = 'PRJEB45555'
 params.TEST_SUBMISSION = 'true'
+params.ASYNC_FLAG = 'false'
 
 nextflow.enable.dsl = 2
 
