@@ -1,9 +1,5 @@
 #!/usr/bin/env nextflow
 
-params.INDEX = "gs://prj-int-dev-covid19-nf-gls/prepro/illumina.index.tsv"
-params.STOREDIR = "gs://prj-int-dev-covid19-nf-gls/prepro/storeDir"
-params.OUTDIR = "gs://prj-int-dev-covid19-nf-gls/prepro/results"
-
 params.INDEX = "gs://sands-nf-tower/illumina5.tsv"
 params.STOREDIR = "gs://sands-nf-tower/storeDir"
 params.OUTDIR = "gs://sands-nf-tower/results"
@@ -24,7 +20,7 @@ process map_to_reference {
 
     cpus 8
     memory '8 GB'
-    container 'davidyuyuan/ena-sars-cov2-illumina:2.0'
+    container 'quay.io/enasequence/ena-sars-cov2-illumina'
 
     input:
     tuple val(run_accession), val(sample_accession), file(input_file_1), file(input_file_2) //from samples_ch
