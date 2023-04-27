@@ -27,7 +27,7 @@ process map_to_reference {
 
     cpus 8
     memory '8 GB'
-    container 'sands0/ena-sars-cov2-illumina:1.1'
+    container 'quay.io/enasequence/ena-sars-cov2-illumina'
 
     input:
     tuple val(run_accession), val(sample_accession), file(input_file_1), file(input_file_2)

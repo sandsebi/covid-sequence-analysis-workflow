@@ -3,7 +3,7 @@ process ena_analysis_submit {
     publishDir params.OUTDIR, mode: 'copy'
     storeDir params.STOREDIR
 
-    container 'sands0/ena-analysis-submitter:2.3'
+    container 'quay.io/enasequence/ena-analysis-submitter'
 
     input:
     val(run_accession)
@@ -37,9 +37,9 @@ process ena_analysis_submit {
 
     if [ "${study_accession}" = 'PRJEB45555' ]; then
         echo "Webin Username: \${webin_id} and Password: \${webin_password}"
-        analysis_submission.py -t ${test_submission} -o ${run_accession}_output/${study_accession} -p PRJEB59443 -s ${sample_accession} -r ${run_accession} -f ${output_bam},${output_coverage_gz},${output_annot_vcf_gz} -a PATHOGEN_ANALYSIS -au \${webin_id} -ap \${webin_password}
-        analysis_submission.py -t ${test_submission} -o ${run_accession}_output/${study_accession} -p PRJEB59444 -s ${sample_accession} -r ${run_accession} -f ${filtered_vcf_gz} -a FILTERED_VARIATION -au \${webin_id} -ap \${webin_password}
-        analysis_submission.py -t ${test_submission} -o ${run_accession}_output/${study_accession} -p PRJEB59445 -s ${sample_accession} -r ${run_accession} -f ${consensus_fasta_gz} -a SEQUENCE_CONSENSUS -au \${webin_id} -ap \${webin_password}
+        analysis_submission.py -t ${test_submission} -o ${run_accession}_output/${study_accession} -p PRJEB61669 -s ${sample_accession} -r ${run_accession} -f ${output_bam},${output_coverage_gz},${output_annot_vcf_gz} -a PATHOGEN_ANALYSIS -au \${webin_id} -ap \${webin_password}
+        analysis_submission.py -t ${test_submission} -o ${run_accession}_output/${study_accession} -p PRJEB61668 -s ${sample_accession} -r ${run_accession} -f ${filtered_vcf_gz} -a FILTERED_VARIATION -au \${webin_id} -ap \${webin_password}
+        analysis_submission.py -t ${test_submission} -o ${run_accession}_output/${study_accession} -p PRJEB61667 -s ${sample_accession} -r ${run_accession} -f ${consensus_fasta_gz} -a SEQUENCE_CONSENSUS -au \${webin_id} -ap \${webin_password}
     else
         analysis_submission.py -t ${test_submission} -o ${run_accession}_output/${study_accession} -p ${study_accession} -s ${sample_accession} -r ${run_accession} -f ${run_accession} -f ${output_bam},${output_coverage_gz},${output_annot_vcf_gz} -a PATHOGEN_ANALYSIS -au \${webin_id} -ap \${webin_password}
         analysis_submission.py -t ${test_submission} -o ${run_accession}_output/${study_accession} -p ${study_accession} -s ${sample_accession} -r ${run_accession} -f ${filtered_vcf_gz} -a COVID19_FILTERED_VCF -au \${webin_id} -ap \${webin_password}
