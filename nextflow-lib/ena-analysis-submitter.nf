@@ -3,11 +3,7 @@ process ena_analysis_submit {
     publishDir params.OUTDIR, mode: 'copy'
     storeDir params.STOREDIR
 
-<<<<<<< HEAD
-    container 'sands0/ena-analysis-submitter:1'
-=======
     container 'quay.io/enasequence/ena-analysis-submitter'
->>>>>>> 854b327 (Change projects and use quay.io containers)
 
     input:
     val(run_accession)
